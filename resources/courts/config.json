@@ -1,0 +1,62 @@
+{
+	"type": "Collection",
+	"properties": {
+		"name": {
+			"name": "name",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "name",
+			"order": 1
+		},
+		"booked": {
+			"name": "booked",
+			"type": "array",
+			"typeLabel": "string",
+			"required": false,
+			"id": "booked",
+			"order": 2
+		},
+		"dbId": {
+			"name": "dbId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "dbId",
+			"order": 3
+		},
+		"checkBook": {
+			"name": "checkBook",
+			"type": "array",
+			"typeLabel": "string",
+			"required": false,
+			"id": "checkBook",
+			"order": 4
+		},
+		"unitTime": {
+			"name": "unitTime",
+			"type": "number",
+			"typeLabel": "string",
+			"required": true,
+			"id": "unitTime",
+			"order": 5
+		},
+		"unitPrice": {
+			"name": "unitPrice",
+			"type": "number",
+			"typeLabel": "string",
+			"required": true,
+			"id": "unitPrice",
+			"order": 6
+		},
+		"maxTime": {
+			"name": "maxTime",
+			"type": "number",
+			"typeLabel": "string",
+			"required": false,
+			"id": "maxTime",
+			"order": 7
+		}
+
+	}
+}

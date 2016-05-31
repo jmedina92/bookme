@@ -1,0 +1,37 @@
+{
+	"type": "Collection",
+	"properties": {
+		"productId": {
+			"name": "productId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "productId",
+			"order": 1
+		},
+		"initDate": {
+			"name": "initDate",
+			"type": "number",
+			"typeLabel": "string",
+			"required": false,
+			"id": "initDate",
+			"order": 2
+		},
+		"endDate": {
+			"name": "endDate",
+			"type": "number",
+			"typeLabel": "string",
+			"required": false,
+			"id": "endDate",
+			"order": 3
+		},
+		"bookPrice":{
+			"name": "bookPrice",
+			"type": "number",
+			"typeLabel": "string",
+			"required": false,
+			"id": "bookPrice",
+			"order": 4
+		}
+	}
+}
