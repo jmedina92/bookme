@@ -4,7 +4,6 @@ if (!me) {
 if(this.itemId){
 	dpd.courts.get(this.itemId,function(item, error) {
 		if(error){
-			console.log(error);
 			cancel("There are errors", 404);
 		}else if (item){
 			var self = this;
