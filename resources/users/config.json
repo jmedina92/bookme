@@ -1,0 +1,29 @@
+{
+	"type": "UserCollection",
+	"properties": {
+		"role": {
+			"name": "role",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "role",
+			"order": 1
+		},
+		"owner": {
+			"name": "owner",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "owner",
+			"order": 2
+		},
+		"productsId": {
+			"name": "productsId",
+			"type": "array",
+			"typeLabel": "string",
+			"required": false,
+			"id": "productsId",
+			"order": 3
+		}
+	}
+}

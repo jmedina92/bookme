@@ -29,7 +29,7 @@ if(this.checkBook){
 			var endDateCheck = book[2];   
 			if (initDateNew < initDateCheck && endDateNew < endDateCheck) {
 				self.booked = arrayPush(booked,checkBook);
-			}else if(initDateNew > initDateCheck && initDateNew > endDateCheck){
+			}else if(initDateNew > initDateCheck && initDateNew >= endDateCheck){
 				self.booked = arrayPush(booked,checkBook);
 			}else{
 				error('overlap',"Error in dates" );
@@ -41,6 +41,9 @@ if(this.checkBook){
 	}
 	console.log(this);
 }else{
+	if (me.role == 'limit') {
+		cancel("This user role can't create product or modify attributes", 401);			
+	}
 	console.log("Another call type: " + this);
 }
 

@@ -1,6 +1,7 @@
-dpd.courts.get({ dbId: this.productId },function(court, error) {
+dpd.courts.get({ dbId: this.dbProductId },function(court, error) {
 	if(error){
 		console.log(error);
+		cancel("There are errors", 404);
 	}else if (court && court.length){
 		var self = this;
 		court.forEach(function(t){
@@ -11,11 +12,10 @@ dpd.courts.get({ dbId: this.productId },function(court, error) {
 					cancel("Error in date", 400);
 				}else{
 					self.bookPrice = calculateBookPrice(t.unitTime, t.unitPrice, self.initDate, self.endDate);
-					console.log(this);
+					self.itemId = t.id;
 				}
 			});
 		});
-
 	}else{
 		cancel("Court doesn't exists", 404);
 	}

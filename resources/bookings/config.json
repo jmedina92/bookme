@@ -1,12 +1,12 @@
 {
 	"type": "Collection",
 	"properties": {
-		"productId": {
-			"name": "productId",
+		"dbProductId": {
+			"name": "dbProductId",
 			"type": "string",
 			"typeLabel": "string",
 			"required": true,
-			"id": "productId",
+			"id": "dbProductId",
 			"order": 1
 		},
 		"initDate": {
@@ -32,6 +32,14 @@
 			"required": false,
 			"id": "bookPrice",
 			"order": 4
+		},
+		"itemId":{
+			"name": "itemId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "itemId",
+			"order": 5
 		}
 	}
 }

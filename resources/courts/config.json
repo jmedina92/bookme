@@ -9,13 +9,21 @@
 			"id": "name",
 			"order": 1
 		},
+		"productOwner": {
+			"name": "productOwner",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "productOwner",
+			"order": 2
+		},
 		"booked": {
 			"name": "booked",
 			"type": "array",
 			"typeLabel": "string",
 			"required": false,
 			"id": "booked",
-			"order": 2
+			"order": 3
 		},
 		"dbId": {
 			"name": "dbId",
@@ -23,7 +31,7 @@
 			"typeLabel": "string",
 			"required": true,
 			"id": "dbId",
-			"order": 3
+			"order": 4
 		},
 		"checkBook": {
 			"name": "checkBook",
@@ -31,7 +39,7 @@
 			"typeLabel": "string",
 			"required": false,
 			"id": "checkBook",
-			"order": 4
+			"order": 5
 		},
 		"unitTime": {
 			"name": "unitTime",
@@ -39,7 +47,7 @@
 			"typeLabel": "string",
 			"required": true,
 			"id": "unitTime",
-			"order": 5
+			"order": 6
 		},
 		"unitPrice": {
 			"name": "unitPrice",
@@ -47,7 +55,7 @@
 			"typeLabel": "string",
 			"required": true,
 			"id": "unitPrice",
-			"order": 6
+			"order": 7
 		},
 		"maxTime": {
 			"name": "maxTime",
@@ -55,8 +63,7 @@
 			"typeLabel": "string",
 			"required": false,
 			"id": "maxTime",
-			"order": 7
+			"order": 8
 		}
-
 	}
 }
