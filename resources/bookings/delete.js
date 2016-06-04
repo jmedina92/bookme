@@ -11,10 +11,16 @@ if(this.itemId){
 		    	cancel("Role Error", 401);
 			}else if (!(item.productOwner ==  me.id || me.productsId.indexOf(item.id) != -1)){
 	    		cancel("It's not your product", 401);
-			}
+			}			
 			if (item.booked){
 				var array = [self.id,self.initDate,self.endDate];
 				item.booked = deleteBookInProduct(array, item.booked);
+				dpd.courts.put(item.id, {checkBook: {$push:"Pull Request"}, booked : item.booked }, function(result,error){
+					if (error) {
+						console.log(error);
+						cancel("Error in Pull", 400);
+					}
+				});
 			}
 		}else{
 			cancel("Court doesn't exists", 404);
