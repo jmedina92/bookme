@@ -39,7 +39,6 @@ if(this.checkBook){
 		}else{
 			this.booked = checkBook;
 		}
-		console.log(this);
 	}else{
 		this.checkBook = null;	
 	}
@@ -47,7 +46,6 @@ if(this.checkBook){
 	if (me.role == 'limit') {
 		cancel("This user role can't create product or modify attributes", 401);			
 	}
-	console.log("Another call type: " + this);
 }
 
 function arrayPush(booked, newbook){

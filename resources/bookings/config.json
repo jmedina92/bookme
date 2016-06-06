@@ -13,7 +13,7 @@
 			"name": "initDate",
 			"type": "number",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "initDate",
 			"order": 2
 		},

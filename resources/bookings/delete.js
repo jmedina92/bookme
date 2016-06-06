@@ -17,7 +17,6 @@ if(this.itemId){
 				item.booked = deleteBookInProduct(array, item.booked);
 				dpd.courts.put(item.id, {checkBook: {$push:"Pull Request"}, booked : item.booked }, function(result,error){
 					if (error) {
-						console.log(error);
 						cancel("Error in Pull", 400);
 					}
 				});
@@ -34,7 +33,8 @@ function deleteBookInProduct(array, bookedArray){
 	aux1 = bookedArray;
 	for(var i = aux1.length - 1; i >= 0; i--) {
 	    if(arraysIdentical(aux1[i], array)) {
-		    aux1.splice(i, 1);
+	    	if (aux1.length == 1) aux1 = null;
+		    else aux1.splice(i, 1);
 	    }
 	}
 	return aux1;
