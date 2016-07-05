@@ -1,15 +1,15 @@
 if (!me) {
     cancel("You must be logged", 401);
 }
-dpd.courts.get({ dbId: this.dbProductId },function(court, error) {
+dpd.equipments.get({ dbId: this.dbProductId },function(equipment, error) {
 	if(error){
 		cancel("There are errors", 404);
-	}else if (court && court.length){
+	}else if (equipment && equipment.length){
 		var self = this;
-		court.forEach(function(t){
+		equipment.forEach(function(t){
 			if (!(self.endDate && self.endDate.length)) self.endDate = self.initDate + t.unitTime;
 			var array = [self.id,self.initDate,self.endDate];			
-			dpd.courts.put(t.id, {checkBook:{$push: array}}, function(result,error){
+			dpd.equipments.put(t.id, {checkBook:{$push: array}}, function(result,error){
 				if (error) {
 					cancel("Error in date", 400);
 				}else{
@@ -19,11 +19,11 @@ dpd.courts.get({ dbId: this.dbProductId },function(court, error) {
 			});
 		});
 	}else{
-		cancel("Court doesn't exists", 404);
+		cancel("Equipment doesn't exists", 404);
 	}
 });
 
 
-function calculateBookPrice(courtUnitTime, courtUnitPrice, bookInitDate, bookEndDate){
-	return courtUnitPrice * (bookEndDate - bookInitDate) / courtUnitTime;
+function calculateBookPrice(equipmentUnitTime, equipmentUnitPrice, bookInitDate, bookEndDate){
+	return equipmentUnitPrice * (bookEndDate - bookInitDate) / equipmentUnitTime;
 }

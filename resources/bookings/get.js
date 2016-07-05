@@ -2,7 +2,7 @@ if (!me) {
     cancel("You must be logged", 401);
 }
 if(this.itemId){
-	dpd.courts.get(this.itemId,function(item, error) {
+	dpd.equipments.get(this.itemId,function(item, error) {
 		if(error){
 			cancel("There are errors", 404);
 		}else if (item){
@@ -13,7 +13,7 @@ if(this.itemId){
 	    		cancel("It's not your product", 401);
 			}
 		}else{
-			cancel("Court doesn't exists", 404);
+			cancel("Equipment doesn't exists", 404);
 		}
 	});
 }else{

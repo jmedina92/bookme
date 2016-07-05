@@ -54,8 +54,8 @@ function arrayPush(booked, newbook){
 	return aux2;
 }
 
-function checkBookingDuration(initDate, endDate, courtUnitTime){
-	if ((endDate - initDate) % courtUnitTime == 0) return true;
+function checkBookingDuration(initDate, endDate, equipmentUnitTime){
+	if ((endDate - initDate) % equipmentUnitTime == 0) return true;
 	return false;
 }
 

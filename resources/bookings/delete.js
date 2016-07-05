@@ -2,7 +2,7 @@ if (!me) {
     cancel("You must be logged", 401);
 }
 if(this.itemId){
-	dpd.courts.get(this.itemId,function(item, error) {
+	dpd.equipments.get(this.itemId,function(item, error) {
 		if(error){
 			cancel("There are errors", 404);
 		}else if (item){
@@ -15,14 +15,14 @@ if(this.itemId){
 			if (item.booked){
 				var array = [self.id,self.initDate,self.endDate];
 				item.booked = deleteBookInProduct(array, item.booked);
-				dpd.courts.put(item.id, {checkBook: {$push:"Pull Request"}, booked : item.booked }, function(result,error){
+				dpd.equipments.put(item.id, {checkBook: {$push:"Pull Request"}, booked : item.booked }, function(result,error){
 					if (error) {
 						cancel("Error in Pull", 400);
 					}
 				});
 			}
 		}else{
-			cancel("Court doesn't exists", 404);
+			cancel("Equipment doesn't exists", 404);
 		}
 	});
 }else{
