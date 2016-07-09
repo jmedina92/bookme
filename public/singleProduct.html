@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="dpd.js"></script>
+	</head>
+	<body>
+		<h1 class="name-equip"></h1>
+		<table class="table-equipments">
+			<thead>
+				<th>Unit Time (Hours)</th>	
+				<th>Max Time (Hours)</th>	
+				<th>Price per Hour(€)</th>	
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</body>
+</html>
+
+<script>
+	$(document).ready(function(){
+		loadEquipment();
+	});
+
+	function loadEquipment(){
+		query = getQueryParams();
+		dpd.equipments.get(query.id, function(equipment, error){
+			unitTime = equipment.unitTime / 3600;
+			if (equipment.maxTime) maxTime = equipment.maxTime / 3600;
+			else maxTime = '-';
+			$('.name-equip').append(equipment.name);
+			$('.table-equipments tbody').append('<tr><td>' + unitTime + '</td><td>' + maxTime + '</td><td>' + equipment.unitPrice + '</tr>');
+		});
+	}
+
+	function getQueryParams() {
+	    qs = document.location.search.split('+').join(' ');
+	    var params = {},
+	        tokens,
+	        re = /[?&]?([^=]+)=([^&]*)/g;
+	    while (tokens = re.exec(qs)) {
+	        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+	    }
+    return params;
+}
+
+
+</script>
+
+<style type="text/css">
+	.table-equipments td{
+		padding: 25px;
+		background-color: #008cba;
+		text-align: center; 
+	}
+	.table-equipments th{
+		padding: 25px;
+		background-color: #008CF0;
+		text-align: center; 
+	}
+
+</style>
