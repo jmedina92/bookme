@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script type="text/javascript" src="dpd.js"></script>
+  		<link rel="stylesheet" href="/web/css/bootstrap-datepicker.css">
 	</head>
 	<body>
-		<h1 class="name-equip"></h1>
-		<table class="table-equipments">
-			<thead>
-				<th>Unit Time (Hours)</th>	
-				<th>Max Time (Hours)</th>	
-				<th>Price per Hour(€)</th>	
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+		<div id="navbar"></div>
+		<div class="container">
+			<div class="jumbotron">
+				<h3 class="name-equip"></h3>
+				<div style="width:45%; display:inline-block;vertical-align: top; margin-right:7%;">
+					<table class="table table-equipments">
+						<thead>
+							<tr>
+								<th>Unit Time (Hours)</th>	
+								<th>Max Time (Hours)</th>	
+								<th>Price per Hour(€)</th>	
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div style="width:45%; display:inline-block;">
+					<div class="date-input"><h4>Date to book:</h4>
+						<form class="form-date">
+							<input name="product-date" type="text" id="datepicker">
+						</form>
+					</div>
+				</div>
+				<div class="calendar"></div>
+			</div>
+		</div>
 	</body>
 </html>
 
+<script type="text/javascript" src="dpd.js"></script>
+<script src="/web/js/bootstrap-datepicker.js"></script>
 <script>
+var query;
 	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar.html');
 		loadEquipment();
+		$( "#datepicker" ).datepicker({
+			format: "dd.mm.yyyy",
+			keyboardNavigation: false
+		})
+		.on('changeDate', function(e) {
+		  	$('.form-date').submit();
+		});
+
 	});
+
+	$('.form-date').on('submit', function(e){
+		e.preventDefault();
+		date = $('#datepicker').val();
+		dpd.bookings.get({itemId: query.id}, function(bookings, error){
+			if(!error){
+				bookings.forEach(function(booking){
+					initDate = new Date(booking.initDate * 1000);
+					alert(initDate.getDate());
+					
+				})
+			}
+		})
+
+	})
 
 	function loadEquipment(){
 		query = getQueryParams();
@@ -49,17 +92,3 @@
 
 
 </script>
-
-<style type="text/css">
-	.table-equipments td{
-		padding: 25px;
-		background-color: #008cba;
-		text-align: center; 
-	}
-	.table-equipments th{
-		padding: 25px;
-		background-color: #008CF0;
-		text-align: center; 
-	}
-
-</style>

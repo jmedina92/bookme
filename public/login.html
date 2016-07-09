@@ -1,23 +1,26 @@
-<!DOCTYPE html>
 <html>
 	<head>
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-	  	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-	  	<script type="text/javascript" src="dpd.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 	</head>
 	<body>
-	  	<form class="form-login">
-	  		<input type="text" name="user" class="input-user">
-	  		<input type="password" name="pass" class="input-pass">
-	  		<input type="submit" value="Submit">
-	  	</form>
+		<div class="container">
+			<div class="jumbotron">
+			  	<form class="form-signin">
+			  		<input type="text" name="user" class="form-control input-user">
+			  		<input type="password" name="pass" class="form-control input-pass">
+			  		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+			  	</form>
+		  	</div>
+	  	</div>
 	</body>
 </html>
 
 
 <script>
-	$('.form-login').on('submit', function(e){
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+    });
+	$('.form-signin').on('submit', function(e){
 		e.preventDefault();
 		username = $('.input-user').val();
 		pass = $('.input-pass').val();

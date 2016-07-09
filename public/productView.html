@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script type="text/javascript" src="dpd.js"></script>
 	</head>
 	<body>
-		<h1>Equipments</h1>
-		<table class="table-equipments">
-			<thead>
-				<th>Name</th>
-				<th>Unit Time (Hours)</th>	
-				<th>Max Time (Hours)</th>	
-				<th>Price per Hour(€)</th>	
-				<th>Book now!</th>	
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+		<div id="navbar"></div>
+		<div class="container">
+			<div class="jumbotron">
+				<h3>Equipments</h3>
+				<table class="table table-equipments">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Unit Time (Hours)</th>	
+							<th>Max Time (Hours)</th>	
+							<th>Price per Hour(€)</th>	
+							<th>Book now!</th>	
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</body>
 </html>
 
+<script type="text/javascript" src="../dpd.js"></script>
 <script>
 	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar.html');
 		loadEquipments();
 	});
 
@@ -34,7 +41,7 @@
 					unitTime = equipment.unitTime / 3600;
 					if (equipment.maxTime) maxTime = equipment.maxTime / 3600;
 					else maxTime = '-';
-					$('.table-equipments tbody').append('<tr><td>' + equipment.name + '</td><td>' + unitTime + '</td><td>' + maxTime + '</td><td>' + equipment.unitPrice + '</td><td><a target="_blank" href="/singleProduct.html?id='+ equipment.id +'"><input type="button" value="book"></a></td></tr>');
+					$('.table-equipments tbody').append('<tr><td>' + equipment.name + '</td><td>' + unitTime + '</td><td>' + maxTime + '</td><td>' + equipment.unitPrice + '</td><td><a target="_blank" href="/singleProduct.html?id='+ equipment.id +'"><button type="button" class="btn">Book</button></a></td></tr>');
 				})
 			}
 		});
@@ -44,15 +51,6 @@
 </script>
 
 <style type="text/css">
-	.table-equipments td{
-		padding: 25px;
-		background-color: #008cba;
-		text-align: center; 
-	}
-	.table-equipments th{
-		padding: 25px;
-		background-color: #008CF0;
-		text-align: center; 
-	}
+
 
 </style>
