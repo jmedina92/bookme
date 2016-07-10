@@ -1,4 +1,15 @@
 .table td, th{
 	text-align: center;
 }
-
+.calendar{
+	width: 100%;
+}
+.img-loader-item{
+	position: relative;
+	left: 334px;
+}
+.food{
+	font-size: 50px;
+	position: relative;
+	vertical-align: middle;
+}

@@ -7,7 +7,7 @@ dpd.equipments.get({ dbId: this.dbProductId },function(equipment, error) {
 	}else if (equipment && equipment.length){
 		var self = this;
 		equipment.forEach(function(t){
-			if (!(self.endDate && self.endDate.length)) self.endDate = self.initDate + t.unitTime;
+			if (!(self.endDate)) self.endDate = self.initDate + t.unitTime;
 			var array = [self.id,self.initDate,self.endDate];			
 			dpd.equipments.put(t.id, {checkBook:{$push: array}}, function(result,error){
 				if (error) {

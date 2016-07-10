@@ -29,7 +29,8 @@
 						</form>
 					</div>
 				</div>
-				<div class="calendar"></div>
+				<div class="calendar">
+				</div>
 			</div>
 		</div>
 	</body>
@@ -39,44 +40,129 @@
 <script src="/web/js/bootstrap-datepicker.js"></script>
 <script>
 var query;
+var equipmentvar;
 	$(document).ready(function(){
 		$('head').load('/layout/fluid.html');
         $('#navbar').load('/layout/navbar.html');
 		loadEquipment();
 		$( "#datepicker" ).datepicker({
-			format: "dd.mm.yyyy",
-			keyboardNavigation: false
+			format: "mm/dd/yyyy",
+			keyboardNavigation: false,
+			weekStart: 1,
 		})
 		.on('changeDate', function(e) {
-		  	$('.form-date').submit();
+			loaderIMG();
+			setTimeout("$('.form-date').submit();", 1000);	  	
 		});
-
 	});
 
 	$('.form-date').on('submit', function(e){
 		e.preventDefault();
-		date = $('#datepicker').val();
+		date = new Date($('#datepicker').val());
 		dpd.bookings.get({itemId: query.id}, function(bookings, error){
 			if(!error){
+				var arraybookings = [];
 				bookings.forEach(function(booking){
 					initDate = new Date(booking.initDate * 1000);
-					alert(initDate.getDate());
-					
+					//alert(initDate.getUTCDate() + '==' + date.getDate() +'&&'+ initDate.getUTCMonth() +'== '+date.getUTCMonth() +'&&'+ initDate.getUTCFullYear() +'==' + date.getUTCFullYear());
+					if (initDate.getUTCDate() == date.getDate() && initDate.getUTCMonth() == date.getUTCMonth() && initDate.getUTCFullYear() == date.getUTCFullYear()) {
+						arraybookings.push(booking);
+					}
 				})
+				loadCalendar(arraybookings);
 			}
 		})
-
 	})
+
+	function loadCalendar(arraybookings){
+		$('.calendar').html('<h2></h2><table class="table"><thead><tr><th>Init</th><th>End</th><th>Book now!</th></tr></thead><tbody></tbody></table>');
+			unitbookendHour = 8;
+			unitbookendMinutes = 0;
+		for (var j = 1; j <= 12; j++) {
+			unitbookinitHour = unitbookendHour;
+			unitbookinitMinutes = unitbookendMinutes;
+			unitbookendHour = unitbookinitHour + Math.floor(equipmentvar.unitTime);
+			unitbookendMinutes = unitbookinitMinutes + (equipmentvar.unitTime % 1) * 60;
+			if (unitbookinitMinutes > 59) {
+				unitbookinitMinutes -= 60;
+				unitbookinitHour++;
+			}
+			if (unitbookendMinutes > 59) {
+				unitbookendMinutes -= 60;
+				unitbookendHour++;
+			}
+			$('.calendar table tbody').append('<tr class="unitbook success book-'+j+'"><td>'+ fmin(unitbookinitHour) +':'+fmin(unitbookinitMinutes)+'</td><td>'+fmin(unitbookendHour) +':'+ fmin(unitbookendMinutes)+'</td><td><input type="checkbox"></td></tr>');			
+
+			for (var i = 0; i < arraybookings.length; i++) {
+				bookinitHour = (new Date(arraybookings[i]['initDate'] * 1000)).getUTCHours();
+				bookinitMinute = (new Date (arraybookings[i]['initDate'] * 1000)).getUTCMinutes();
+				bookendHour = (new Date(arraybookings[i]['endDate'] * 1000)).getUTCHours();
+				bookendMinute = (new Date (arraybookings[i]['endDate'] * 1000)).getUTCMinutes();
+				//alert(bookinitHour + '-' + unitbookinitHour + '---' + bookinitMinute + '-' + unitbookinitMinutes);
+				if (bookinitHour == unitbookinitHour && bookinitMinute == unitbookinitMinutes) {
+					$('.book-' + j).removeClass('success').addClass('danger');	
+					checkinterval = [i,j];	
+				}
+				if (bookendHour == unitbookendHour && bookendMinute == unitbookendMinutes) {
+					if (checkinterval[0] == i && checkinterval[1] == j){
+						$('.book-' + j).removeClass('success').addClass('danger');		
+					}else if (checkinterval[0] == i){
+						for(var k = checkinterval[1] + 1; k <= j; k++){
+							$('.book-' + k).removeClass('success').addClass('danger');		
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 	function loadEquipment(){
 		query = getQueryParams();
 		dpd.equipments.get(query.id, function(equipment, error){
+			equipmentvar = equipment;
 			unitTime = equipment.unitTime / 3600;
-			if (equipment.maxTime) maxTime = equipment.maxTime / 3600;
-			else maxTime = '-';
+			equipmentvar.unitTime = unitTime;
+			if (equipment.maxTime){
+				maxTime = equipment.maxTime / 3600;
+				equipmentvar.maxTime = maxTime;
+			}else maxTime = '-';
 			$('.name-equip').append(equipment.name);
 			$('.table-equipments tbody').append('<tr><td>' + unitTime + '</td><td>' + maxTime + '</td><td>' + equipment.unitPrice + '</tr>');
 		});
+	}
+
+	function loaderIMG(){
+		$('.calendar').html('<div class="img-loader"></div>');
+		initposition = $('.img-loader').width() / 4;		
+		$('.img-loader').html('<img class="img-loader-item" style="left:'+initposition+'px" title="Wait for it" src="/web/img/ajax-loader.gif">');
+		startposition = initposition;
+		endposition =  2 * $('.img-loader').width() / 4 ;
+		widthImg = 50;
+		foodForPacman(startposition, endposition, widthImg);
+		loop = function(){
+				$('.food-pacman-' + initposition).remove();
+				initposition += widthImg;
+				if (initposition >= endposition){
+					initposition = startposition;
+					foodForPacman(startposition, endposition, widthImg);	
+				} 
+				$('.img-loader-item').animate({left: initposition + 'px'}, 500, 
+					function(){
+						loop();
+					});
+			};
+		loop();
+	}
+
+	function foodForPacman(startposition, endposition, widthImg){
+		for (var i = startposition + widthImg; i <= endposition; i += widthImg) {
+			$('.img-loader').append('<span class="food food-pacman-'+ i +'" style="left:'+i+'px">·</span>');			
+		}
+	}
+
+	function fmin(n){
+	    return n > 9 ? "" + n: "0" + n;
 	}
 
 	function getQueryParams() {
