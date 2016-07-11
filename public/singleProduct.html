@@ -41,6 +41,7 @@
 <script>
 var query;
 var equipmentvar;
+var lock;
 	$(document).ready(function(){
 		$('head').load('/layout/fluid.html');
         $('#navbar').load('/layout/navbar.html');
@@ -75,10 +76,11 @@ var equipmentvar;
 	})
 
 	function loadCalendar(arraybookings){
-		$('.calendar').html('<h2></h2><table class="table"><thead><tr><th>Init</th><th>End</th><th>Book now!</th></tr></thead><tbody></tbody></table>');
+		$('.calendar').html('<h2></h2><button class="btn btn-block btn-primary disabled btn-book">Select the book interval</button><table class="table"><thead><tr><th>Init</th><th>End</th><th>Book now!</th></tr></thead><tbody></tbody></table><button class="btn btn-block btn-primary disabled btn-book">Select the book interval</button>');
 			unitbookendHour = 8;
 			unitbookendMinutes = 0;
-		for (var j = 1; j <= 12; j++) {
+			totallines = 12 / equipmentvar.unitTime;
+		for (var j = 1; j <= totallines; j++) {
 			unitbookinitHour = unitbookendHour;
 			unitbookinitMinutes = unitbookendMinutes;
 			unitbookendHour = unitbookinitHour + Math.floor(equipmentvar.unitTime);
@@ -91,7 +93,7 @@ var equipmentvar;
 				unitbookendMinutes -= 60;
 				unitbookendHour++;
 			}
-			$('.calendar table tbody').append('<tr class="unitbook success book-'+j+'"><td>'+ fmin(unitbookinitHour) +':'+fmin(unitbookinitMinutes)+'</td><td>'+fmin(unitbookendHour) +':'+ fmin(unitbookendMinutes)+'</td><td><input type="checkbox"></td></tr>');			
+			$('.calendar table tbody').append('<tr class="unitbook success book-'+j+'"><td>'+ fmin(unitbookinitHour) +':'+fmin(unitbookinitMinutes)+'</td><td>'+fmin(unitbookendHour) +':'+ fmin(unitbookendMinutes)+'</td><td><input class="bookedCheckbox" type="checkbox" value="'+fmin(unitbookinitHour) +':'+fmin(unitbookinitMinutes)+'/'+fmin(unitbookendHour) +':'+ fmin(unitbookendMinutes)+'"></td></tr>');			
 
 			for (var i = 0; i < arraybookings.length; i++) {
 				bookinitHour = (new Date(arraybookings[i]['initDate'] * 1000)).getUTCHours();
@@ -101,20 +103,68 @@ var equipmentvar;
 				//alert(bookinitHour + '-' + unitbookinitHour + '---' + bookinitMinute + '-' + unitbookinitMinutes);
 				if (bookinitHour == unitbookinitHour && bookinitMinute == unitbookinitMinutes) {
 					$('.book-' + j).removeClass('success').addClass('danger');	
+					$('.book-' + j + ' input').remove();	
 					checkinterval = [i,j];	
 				}
 				if (bookendHour == unitbookendHour && bookendMinute == unitbookendMinutes) {
 					if (checkinterval[0] == i && checkinterval[1] == j){
-						$('.book-' + j).removeClass('success').addClass('danger');		
+						$('.book-' + j).removeClass('success').addClass('danger');
+						$('.book-' + j + ' input').remove();	
 					}else if (checkinterval[0] == i){
 						for(var k = checkinterval[1] + 1; k <= j; k++){
-							$('.book-' + k).removeClass('success').addClass('danger');		
+							$('.book-' + k).removeClass('success').addClass('danger');
+							$('.book-' + k + ' input').remove();	
 						}
 					}
 				}
 			}
 		}
 	}
+	var elementNext;
+	var elementPrev;
+	$(document).on('change', '.bookedCheckbox', function() {
+    	numbersOfPossible = equipmentvar.maxTime / equipmentvar.unitTime;   		
+   		if(this.checked) {
+   			lock--;
+   			$('.btn-book').html('Booking').removeClass('disabled');
+	        if (equipmentvar.maxTime > equipmentvar.unitTime) {
+	        	parent = $(this).parents('tr');
+	        	parent.addClass('possibleBooking');
+	        	if (this == elementNext) {
+	        		elementNext = parent.next();
+	        		elementPrev = false;
+        		}else if (this == elementPrev){
+		        	elementPrev = parent.prev();	
+		        	elementNext = false;
+        		}else{
+	        		elementNext = parent.next();
+		        	elementPrev = parent.prev();	
+        		}
+        		if (elementNext && $(elementNext).prop('tagName') == 'TR' && !$(elementNext).hasClass('danger')){
+        			$(elementNext).addClass('possibleBooking').removeClass('tr-disabled');
+        			elementNext = elementNext.next();
+    			}else elementNext = false;
+        		if (elementPrev && $(elementPrev).prop('tagName') == 'TR' && !$(elementPrev).hasClass('danger')) {
+        			$(elementPrev).addClass('possibleBooking').removeClass('tr-disabled');
+        			elementPrev = elementPrev.prev();
+    			}else elementPrev = false;
+
+
+    			if (lock == 0) $(".bookedCheckbox:not(:checked)").parents('tr').removeClass('possibleBooking').addClass('tr-disabled');
+
+	    		$(".possibleBooking").children().find('input').removeAttr('disabled');
+	        	$(".unitbook:not(.possibleBooking)").children().find('input').attr('disabled', 'disable');
+	        	$(".unitbook:not(.possibleBooking)").addClass('tr-disabled');
+	        }
+	    }else{
+   			$('.btn-book').html('Select the book interval').addClass('disabled');
+	    	$(".unitbook").children().find('input').removeAttr('disabled');
+	    	$(".unitbook").children().find('input').removeAttr('checked');
+        	$(".unitbook").removeClass('tr-disabled');
+        	$(".unitbook").removeClass('possibleBooking');
+        	lock = numbersOfPossible;
+	    }
+	});
 
 
 	function loadEquipment(){
@@ -127,6 +177,7 @@ var equipmentvar;
 				maxTime = equipment.maxTime / 3600;
 				equipmentvar.maxTime = maxTime;
 			}else maxTime = '-';
+			lock = equipmentvar.maxTime / equipmentvar.unitTime;
 			$('.name-equip').append(equipment.name);
 			$('.table-equipments tbody').append('<tr><td>' + unitTime + '</td><td>' + maxTime + '</td><td>' + equipment.unitPrice + '</tr>');
 		});

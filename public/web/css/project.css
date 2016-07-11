@@ -13,3 +13,6 @@
 	position: relative;
 	vertical-align: middle;
 }
+.tr-disabled td{
+	background-color: rgba(0,0,0,0.2) !important;
+}
