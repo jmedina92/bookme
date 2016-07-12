@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
   		<link rel="stylesheet" href="/web/css/bootstrap-datepicker.css">
 	</head>
 	<body>
@@ -39,9 +39,14 @@
 <script type="text/javascript" src="dpd.js"></script>
 <script src="/web/js/bootstrap-datepicker.js"></script>
 <script>
-var query;
-var equipmentvar;
-var lock;
+
+	var query;
+	var equipmentvar;
+	var lock;
+	var elementNext;
+	var elementPrev;
+	var date;
+
 	$(document).ready(function(){
 		$('head').load('/layout/fluid.html');
         $('#navbar').load('/layout/navbar.html');
@@ -76,10 +81,10 @@ var lock;
 	})
 
 	function loadCalendar(arraybookings){
-		$('.calendar').html('<h2></h2><button class="btn btn-block btn-primary disabled btn-book">Select the book interval</button><table class="table"><thead><tr><th>Init</th><th>End</th><th>Book now!</th></tr></thead><tbody></tbody></table><button class="btn btn-block btn-primary disabled btn-book">Select the book interval</button>');
-			unitbookendHour = 8;
-			unitbookendMinutes = 0;
-			totallines = 12 / equipmentvar.unitTime;
+		$('.calendar').html('<h2></h2><button class="btn btn-block btn-primary btn-book disabled" onclick="bookingAction(this)">Select the book interval</button><table class="table"><thead><tr><th>Init</th><th>End</th><th>Book now!</th></tr></thead><tbody></tbody></table><button class="btn btn-block btn-primary disabled btn-book" onclick="bookingAction(this)">Select the book interval</button>');
+		unitbookendHour = 8;
+		unitbookendMinutes = 0;
+		totallines = 12 / equipmentvar.unitTime;
 		for (var j = 1; j <= totallines; j++) {
 			unitbookinitHour = unitbookendHour;
 			unitbookinitMinutes = unitbookendMinutes;
@@ -103,16 +108,19 @@ var lock;
 				//alert(bookinitHour + '-' + unitbookinitHour + '---' + bookinitMinute + '-' + unitbookinitMinutes);
 				if (bookinitHour == unitbookinitHour && bookinitMinute == unitbookinitMinutes) {
 					$('.book-' + j).removeClass('success').addClass('danger');	
+					$('.book-' + j).attr('booking-id', arraybookings[i]['id']);	
 					$('.book-' + j + ' input').remove();	
 					checkinterval = [i,j];	
 				}
 				if (bookendHour == unitbookendHour && bookendMinute == unitbookendMinutes) {
 					if (checkinterval[0] == i && checkinterval[1] == j){
 						$('.book-' + j).removeClass('success').addClass('danger');
+						$('.book-' + j).attr('booking-id', arraybookings[i]['id']);	
 						$('.book-' + j + ' input').remove();	
 					}else if (checkinterval[0] == i){
 						for(var k = checkinterval[1] + 1; k <= j; k++){
 							$('.book-' + k).removeClass('success').addClass('danger');
+							$('.book-' + k).attr('booking-id', arraybookings[i]['id']);	
 							$('.book-' + k + ' input').remove();	
 						}
 					}
@@ -120,8 +128,7 @@ var lock;
 			}
 		}
 	}
-	var elementNext;
-	var elementPrev;
+
 	$(document).on('change', '.bookedCheckbox', function() {
     	numbersOfPossible = equipmentvar.maxTime / equipmentvar.unitTime;   		
    		if(this.checked) {
@@ -165,6 +172,34 @@ var lock;
         	lock = numbersOfPossible;
 	    }
 	});
+
+	function bookingAction(ele){
+		if (!$(ele).hasClass('disabled')){
+			timeBookValueInit = $('.bookedCheckbox:checked:first').val();
+			splitTimeInit = timeBookValueInit.split("/");
+			start = splitTimeInit[0];
+			startHour = parseInt((start.split(':'))[0]);
+			startMinutes = parseInt((start.split(':'))[1]);
+			newBookingTimeInit = date.getTime() / 1000 +  3600 * (1 + startHour) + startMinutes * 60;
+		
+			timeBookValueEnd = $('.bookedCheckbox:checked:last').val();
+			splitTimeEnd = timeBookValueEnd.split("/");
+			end = splitTimeEnd[1];
+			endHour = parseInt((end.split(':'))[0]);
+			endMinutes = parseInt((end.split(':'))[1]);
+			newBookingTimeEnd = date.getTime() / 1000 +  3600 * (1 + endHour) + endMinutes * 60;
+
+			dpd.bookings.post({dbProductId: equipmentvar.dbId, initDate: newBookingTimeInit, endDate: newBookingTimeEnd }, function(booking, error){
+				if (error) {
+					alert('Sorry, there is a error in your booking request. Try it later please.');
+					location.reload();
+				}else{
+					location.reload();
+				}
+			})
+		}
+	}
+
 
 
 	function loadEquipment(){

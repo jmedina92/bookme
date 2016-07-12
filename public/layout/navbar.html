@@ -1,28 +1,46 @@
   <div class="container">
-       <div class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">MyEquipments</a>
-          </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/login.html">Login</a></li>
-                <li class="active"><a href="/productView.html">Equipments</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
+   <div class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">MyEquipments</a>
       </div>
-    </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/login.html">Login</a></li>
+            <li class="active"><a href="/productView.html">Equipments</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class=""><a href="#" class="userName"></a></li>
+          <li class="active"><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </div>
+  </div>
 
 
+<script>
+    $(document).ready(function(){
+      dpd.users.me(function(result, error) {
+        if (!error && result) {
+          $('.userName').html(result.username);
+        }else{
+          window.location.replace('/login.html');
+        }
+      });
+    })
+
+    function logout(){
+      dpd.users.logout();
+      window.location.replace('/login.html');    
+    }
+</script>
 <!--
     <hr>
     <footer style="text-align: center">
