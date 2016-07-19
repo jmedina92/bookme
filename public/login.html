@@ -26,7 +26,7 @@
 		pass = $('.input-pass').val();
 		dpd.users.login({username:username, password : pass}, function(user, error){
 			if (!error && user) {
-				window.location.replace('/productView.html');
+				window.location.replace('/userDashboard.html');
 			}else{
 				$('body').append('<p>Error to login. Try again</p>');
 			}

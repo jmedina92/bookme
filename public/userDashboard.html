@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div id="navbar"></div>
+			<div class="jumbotron" style="text-align:center">
+			  	<a href="/newUser.html"><button class="btn">Create new user</button></a>
+			  	<a href="/newEquipment.html"><button class="btn">Create new equipment</button></a>
+			  	<a href="/assignEquipmentToUser.html"><button class="btn">Assign equipments to users</button></a>
+		  	</div>
+	  	</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar-min.html');
+    });
+</script>

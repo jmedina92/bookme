@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div id="navbar"></div>
+		<div class="container">
+			<div class="jumbotron">
+				<h3>Thank you for booking</h3>
+				<h4>Your bookig data:</h4>
+				<table class="table table-equipments">
+					<thead>
+						<tr>
+							<th>Init Time</th>	
+							<th>End Time</th>	
+							<th>Price (€)</th>	
+							<th>Reservation Code</th>	
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar.html');
+		loadBooking();
+	});
+
+	function loadBooking(){
+		query = getQueryParams();
+		dpd.bookings.get(query.booking_id, function(booking, error){
+			if(!error){
+				initDate = new Date(booking['initDate'] * 1000);
+				endDate = new Date(booking['endDate'] * 1000);
+				price = booking['bookPrice'];
+				reservation_code = booking['id'];
+				initDate = initDate.getUTCDate() + "/" + ("0" + (initDate.getMonth() + 1)).slice(-2) + "/" + initDate.getUTCFullYear() + " " + fmin(initDate.getUTCHours()) + ":" + fmin(initDate.getUTCMinutes());
+				endDate = endDate.getUTCDate() + "/" + ("0" + (endDate.getMonth() + 1)).slice(-2)  + "/" + endDate.getUTCFullYear() + " " + fmin(endDate.getUTCHours()) + ":" + fmin(endDate.getUTCMinutes());
+				$('.table-equipments tbody').append('<tr><td>' + initDate + '</td><td>' + endDate + '</td><td>' + price + '</td><td>' + reservation_code + '</td></tr>');
+			}
+		});
+	}
+
+	function getQueryParams() {
+	    qs = document.location.search.split('+').join(' ');
+	    var params = {},
+	        tokens,
+	        re = /[?&]?([^=]+)=([^&]*)/g;
+	    while (tokens = re.exec(qs)) {
+	        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+	    }
+ 	   return params;
+	}
+
+	function fmin(n){
+	    return n > 9 ? "" + n: "0" + n;
+	}
+
+</script>

@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div id="navbar"></div>
+			<div class="jumbotron">
+		  	</div>
+	  	</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar-min.html');
+        loadUsers();
+        //loadEquipments();
+    });
+	$('.form-newuser').on('submit', function(e){
+		e.preventDefault();
+		username = $('.input-newuser').val();
+		pass = $('.input-newpass').val();
+		role = $('.input-role').val();
+		dpd.users.post({username:username, password : pass, role: role}, function(user, error){
+			if (!error && user) {
+				window.location.replace('/assignEquipmentToUser.html');
+			}else{
+				$('body').append('<p>Error to create. Try again</p>');
+			}
+		});
+	});
+	var userEquipments;
+
+	function loadUsers(){
+		var userMe;
+		dpd.users.me(function(user){
+			userMe = user;
+		});
+		dpd.users.get(function(users, error){
+			if(!error){
+				users.forEach(function(user){
+					if (user.id != userMe.id){
+					$('.jumbotron').append('<form class="form-assign"><label>User Name</label><input class="form-control" type="text" value="' + user.username + '" readonly=""><label>Actual Products</label><input class="form-control actualProducts-'+user.id+'" type="text" readonly=""><label>Assign this element</label><select name="equipment" class="form-control select input-equipment-'+user.id+'" user_id="'+user.id+'"><option selected="true" disabled="">--Select the equipment--</option><input class="btn btn-lg btn-primary disabled" value="Assign" user_id="'+user.id+'" onclick="loadForm(this)"></form>');
+						loadEquipments(user.productsId, user.id);
+					}
+				})
+			}
+		});
+	}
+
+	function loadEquipments(products, userid){
+	var otherEquipments = [];
+		if (products != null){
+			$.each(products, function(index, val) {
+				otherEquipments.push(val);
+				dpd.equipments.get(val, function(equipment, error){
+					if(!error){
+						dbId = equipment['name'];
+						actualValue = $('.actualProducts-' + userid).val();
+						if (actualValue.length) $('.actualProducts-' + userid).val(actualValue + " - " + dbId );
+						else $('.actualProducts-' + userid).val(dbId);
+					}
+				});
+			});
+			dpd.equipments.get(function(copyEquipments,error){
+				if(!error){
+					copyEquipments.forEach(function(copy){
+						$.each(otherEquipments, function(index, val) {
+							copyId = copy.id;
+							copyName = copy.name;
+							lock = false;
+							if(val == copyId){
+								lock = true;
+								return false;
+							}else{
+								eleId = copyId;
+								eleName = copyName;
+							}
+						});	
+						if(!lock){
+							$('.input-equipment-' + userid).append('<option value="'+eleId+'">'+eleName+'</option>');
+						}	
+					});		
+	
+				}				
+			});
+		}else{
+			dpd.equipments.get(function(copyEquipments,error){
+				if(!error){
+					copyEquipments.forEach(function(copy){
+							copyId = copy.id;
+							copyName = copy.name;
+							$('.input-equipment-' + userid).append('<option value="'+copyId+'">'+copyName+'</option>');
+					});		
+				}				
+			});			
+		}
+	}
+	$(document).on('change', '.select', function() {
+		user_id = $(this).attr('user_id');
+		$('input[user_id="'+user_id+'"]').removeClass('disabled');
+	});
+
+	function loadForm(ele){
+		userid = $(ele).attr('user_id');
+		value = $('select[user_id="'+ userid +'"]').val();
+		dpd.users.put(userid, {productsId:{$push: value}},function(result,error){
+			if(!error){
+				location.reload();
+			}else{
+				$('body').append('<p>Error to create the equipment. Try again</p>');	
+			}
+		});
+	}
+
+</script>
+
+<style type="text/css">
+input, select{
+	margin-bottom: 15px;
+}
+</style>

@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div id="navbar"></div>
+			<div class="jumbotron">
+			  	<form class="form-newuser">
+			  		<label>New user name</label><input type="text" name="new-user" class="form-control input-newuser">
+			  		<label>Password</label><input type="password" name="new-pass" class="form-control input-newpass">
+			  		<label>Role</label><select name="role" class="form-control input-role">
+			  			<option selected="true" disabled="">--Select the role--</option>
+			  			<option value="limit">Limit</option>
+			  			<option value="consult">Consult</option>
+		  			</select>
+			  		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+			  	</form>
+		  	</div>
+	  	</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar-min.html');
+    });
+	$('.form-newuser').on('submit', function(e){
+		e.preventDefault();
+		username = $('.input-newuser').val();
+		pass = $('.input-newpass').val();
+		role = $('.input-role').val();
+		dpd.users.post({username:username, password : pass, role: role}, function(user, error){
+			if (!error && user) {
+				window.location.replace('/assignEquipmentToUser.html');
+			}else{
+				$('body').append('<p>Error to create. Try again</p>');
+			}
+		});
+	});
+</script>
+
+<style type="text/css">
+input, select{
+	margin-bottom: 15px;
+}
+</style>

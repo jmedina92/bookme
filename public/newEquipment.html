@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div id="navbar"></div>
+			<div class="jumbotron">
+			  	<form class="form-newequipment">
+			  		<label>New equipment name</label><input type="text" name="new-equipment" class="form-control input-newequip">
+			  		<label>Data Base Id</label><input type="text" name="new-dbid" class="form-control input-dbid">
+			  		<label>Unit Time (minutes)</label><input type="number" name="unitime" class="form-control input-unittime" min="1">
+			  		<label>Unit Price (€)</label><input type="number" name="unitprice" class="form-control input-unitprice" min="0">
+			  		<label>Max Time (minutes)</label><input type="number" name="maxtime" class="form-control input-maxtime" min="0">
+			  		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+			  	</form>
+		  	</div>
+	  	</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar-min.html');
+    });
+	$('.form-newequipment').on('submit', function(e){
+		e.preventDefault();
+		nameequip = $('.input-newequip').val();
+		databaseid = $('.input-dbid').val();
+		unittime = $('.input-unittime').val() * 60;
+		unitprice = $('.input-unitprice').val();
+		maxtime = $('.input-maxtime').val() * 60;
+		if (maxtime == 0) maxtime = null;
+		dpd.equipments.post({name: nameequip, dbId : databaseid, unitTime: unittime, unitPrice: unitprice, maxTime:  maxtime}, function(equipment, error){
+			if (!error && equipment) {
+				window.location.replace('/singleProduct.html?id='+equipment.id);
+			}else{
+				$('body').append('<p>Error to create the equipment. Try again</p>');
+			}
+		});
+	});
+</script>
+
+<style type="text/css">
+input, select{
+	margin-bottom: 15px;
+}
+</style>

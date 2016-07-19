@@ -194,7 +194,7 @@
 					alert('Sorry, there is a error in your booking request. Try it later please.');
 					location.reload();
 				}else{
-					location.reload();
+					window.location.replace('/congratulations.html?booking_id=' + booking.id);
 				}
 			})
 		}

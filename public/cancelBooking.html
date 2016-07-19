@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<script type="text/javascript" src="/web/js/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div id="navbar"></div>
+			<div class="jumbotron">
+				<h3>Cancel your booking</h3>
+			  	<form class="form-newuser">
+			  		<label>Reservation Code</label><input type="text" name="new-user" class="form-control input-newuser">
+			  		<input type="submit" class="btn btn-lg btn-primary btn-block" value="Cancel Booking">
+			  	</form>
+		  	</div>
+	  	</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="../dpd.js"></script>
+<script>
+	$(document).ready(function(){
+		$('head').load('/layout/fluid.html');
+        $('#navbar').load('/layout/navbar.html');
+    });
+	$('.form-newuser').on('submit', function(e){
+		e.preventDefault();
+		username = $('.input-newuser').val();
+		dpd.bookings.del(username, function(booking, error){
+			if (!error) {
+				window.location.replace('/successCancelation.html');
+			}else{
+				$('body').append('<p>Error to delete. Try again</p>');
+			}
+		});
+	});
+</script>
+
+<style type="text/css">
+input, select{
+	margin-bottom: 15px;
+}
+</style>
